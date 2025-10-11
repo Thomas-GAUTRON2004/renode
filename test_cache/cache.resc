@@ -1,0 +1,18 @@
+:name: Cortex-R52
+
+$bin?=@test_cache/build/main.elf
+$name?="ARM Cortex-R52"
+
+using sysbus
+mach create $name
+
+machine LoadPlatformDescription @platforms/cpus/cortex-r52.repl
+
+cpu CreateExecutionTracing "tracer" $ORIGIN/trace.log PCAndOpcode
+tracer TrackMemoryAccesses
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+runMacro $reset
